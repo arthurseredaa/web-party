@@ -1,5 +1,5 @@
 import express from 'express';
-import {helloWorld, type RoomAck} from "@wp/shared";
+import {type RoomAck} from "@wp/shared";
 import {createServer} from "node:http";
 import {Server} from "socket.io";
 import {RoomRegistry} from "./lib/room.js";
@@ -82,5 +82,4 @@ io.on('connection', (socket) => {
 
 server.listen(3000, () => {
     console.log('Server started on port 3000');
-    helloWorld();
 })
