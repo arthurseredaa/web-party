@@ -19,7 +19,6 @@ const isJoinPayload = (value: unknown): value is {code: string; name: string} =>
     && 'code' in value && typeof value.code === 'string'
     && 'name' in value && typeof value.name === 'string';
 
-// клієнт може не передати колбек, і це не має валити сервер
 const reply = (cb: unknown, ack: RoomAck | {ok: true}) => {
     if (typeof cb === 'function') {
         cb(ack);
@@ -44,7 +43,6 @@ io.on('connection', (socket) => {
         }
     }
 
-    // ack завжди останній аргумент, хоч би скільки всього клієнт надіслав перед ним
     socket.on('room:create', (...args: unknown[]) => {
         const result = roomRegistry.createRoom(socket.id);
 

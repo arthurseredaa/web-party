@@ -1,7 +1,6 @@
 import crypto from "node:crypto";
 import type {Player, RoomAck, RoomState} from "@wp/shared";
 
-// без I та O: на телефоні їх плутають з 1 і 0
 const CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
 const CODE_LENGTH = 4;
 const MAX_PLAYERS = 8;
