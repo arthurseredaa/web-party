@@ -40,3 +40,6 @@ redis-data/
 
 # Claude Code local settings
 .claude/settings.local.json
+
+# Claude Code worktrees
+.claude/worktrees/
