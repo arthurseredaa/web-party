@@ -14,8 +14,17 @@ export type RoomError =
     | 'NAME_TAKEN'
     | 'INVALID_NAME'
     | 'ROOM_FULL'
+    | 'NOT_IN_ROOM'
     | 'BAD_REQUEST';
 
 export type RoomAck =
     | {ok: true; room: RoomState}
     | {ok: false; error: RoomError};
+
+export type BuzzAck =
+    | {ok: true}
+    | {ok: false; error: RoomError};
+
+export type PlayerBuzzed = {
+    playerId: string;
+}

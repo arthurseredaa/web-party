@@ -124,4 +124,11 @@ export class RoomRegistry {
 
         return room ? toState(room) : undefined;
     }
+
+    findPlayerRoomCode({socketId}: {socketId: string}): string | undefined {
+        const code = this.#codeBySocket.get(socketId);
+        const room = code ? this.#rooms.get(code) : undefined;
+
+        return room?.players.has(socketId) ? room.code : undefined;
+    }
 }
