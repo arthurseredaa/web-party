@@ -13,11 +13,11 @@ type Room = {
 }
 
 export type RemoveResult =
-    | {kind: 'none'}
-    | {kind: 'closed'; code: string}
-    | {kind: 'left'; room: RoomState};
+    | {type: 'none'}
+    | {type: 'closed'; code: string}
+    | {type: 'left'; room: RoomState};
 
-const randomCode = () => {
+const generateRandomCode = () => {
     let code = '';
 
     for (let i = 0; i < CODE_LENGTH; i++) {
@@ -37,12 +37,13 @@ export class RoomRegistry {
     #codeBySocket = new Map<string, string>();
     #generateCode: () => string;
 
-    constructor(generateCode: () => string = randomCode) {
+    constructor(generateCode: () => string = generateRandomCode) {
         this.#generateCode = generateCode;
     }
 
-    createRoom(hostId: string): RoomAck {
-        if (this.#codeBySocket.has(hostId)) {
+    createRoom({hostId}: {hostId: string}): RoomAck {
+        const isAlreadyInRoom = this.#codeBySocket.has(hostId);
+        if (isAlreadyInRoom) {
             return {ok: false, error: 'ALREADY_IN_ROOM'};
         }
 
@@ -59,8 +60,9 @@ export class RoomRegistry {
         return {ok: true, room: toState(room)};
     }
 
-    joinRoom(socketId: string, rawCode: string, rawName: string): RoomAck {
-        if (this.#codeBySocket.has(socketId)) {
+    joinRoom({socketId, code: rawCode, name: rawName}: {socketId: string; code: string; name: string}): RoomAck {
+        const isAlreadyInRoom = this.#codeBySocket.has(socketId);
+        if (isAlreadyInRoom) {
             return {ok: false, error: 'ALREADY_IN_ROOM'};
         }
 
@@ -70,11 +72,13 @@ export class RoomRegistry {
         }
 
         const name = rawName.trim();
-        if (name.length === 0 || name.length > MAX_NAME_LENGTH) {
+        const isNameInvalid = name.length === 0 || name.length > MAX_NAME_LENGTH;
+        if (isNameInvalid) {
             return {ok: false, error: 'INVALID_NAME'};
         }
 
-        if (room.players.size >= MAX_PLAYERS) {
+        const isRoomFull = room.players.size >= MAX_PLAYERS;
+        if (isRoomFull) {
             return {ok: false, error: 'ROOM_FULL'};
         }
 
@@ -90,28 +94,29 @@ export class RoomRegistry {
         return {ok: true, room: toState(room)};
     }
 
-    removeSocket(socketId: string): RemoveResult {
+    removeSocket({socketId}: {socketId: string}): RemoveResult {
         const code = this.#codeBySocket.get(socketId);
         const room = code ? this.#rooms.get(code) : undefined;
 
         this.#codeBySocket.delete(socketId);
 
         if (!room) {
-            return {kind: 'none'};
+            return {type: 'none'};
         }
 
-        if (room.hostId === socketId) {
+        const isHost = room.hostId === socketId;
+        if (isHost) {
             for (const playerId of room.players.keys()) {
                 this.#codeBySocket.delete(playerId);
             }
             this.#rooms.delete(room.code);
 
-            return {kind: 'closed', code: room.code};
+            return {type: 'closed', code: room.code};
         }
 
         room.players.delete(socketId);
 
-        return {kind: 'left', room: toState(room)};
+        return {type: 'left', room: toState(room)};
     }
 
     getRoom(code: string): RoomState | undefined {
