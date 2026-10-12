@@ -1,9 +1,9 @@
-# web-mario-party
+# web-party-game
 
 This is a learning project. Arthur is practicing to become a more confident fullstack developer — writing
 the code is his job.
 
-A Mario Party–style board game in the browser: the laptop is the shared screen (the board), phones are
+A board-style party game in the browser (own original setting and sprites): the laptop is the shared screen (the board), phones are
 the controllers. See `ROADMAP.md` for the stages and the current progress.
 
 Stack (planned): pnpm workspaces monorepo — `server` (Node + TypeScript, Express + Socket.IO), `screen` and

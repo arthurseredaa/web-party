@@ -1,5 +1,5 @@
 import { createRoot } from 'react-dom/client';
-import { helloWorld } from '@wmp/shared';
+import { helloWorld } from '@wp/shared';
 
 helloWorld();
 
