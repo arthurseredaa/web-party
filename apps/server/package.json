@@ -5,7 +5,7 @@
   "type": "module",
   "main": "main.ts",
   "scripts": {
-    "dev": "tsx watch --env-file=.env main.ts",
+    "dev": "tsx watch --env-file-if-exists=.env main.ts",
     "typecheck": "tsc --noEmit"
   },
   "keywords": [],
