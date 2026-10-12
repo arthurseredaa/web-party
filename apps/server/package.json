@@ -1,10 +1,11 @@
 {
-  "name": "@wmp/server",
+  "name": "@wp/server",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "main": "main.ts",
   "scripts": {
-    "dev": "tsx watch main.ts",
+    "dev": "tsx watch --env-file=.env main.ts",
     "typecheck": "tsc --noEmit"
   },
   "keywords": [],
@@ -12,9 +13,12 @@
   "license": "ISC",
   "private": true,
   "dependencies": {
-    "@wmp/shared": "workspace:^"
+    "@wp/shared": "workspace:^",
+    "express": "5.2.1",
+    "socket.io": "4.8.4"
   },
   "devDependencies": {
+    "@types/express": "5.0.6",
     "@types/node": "26.6.4",
     "tsx": "4.23.15"
   }
