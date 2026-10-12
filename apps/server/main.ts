@@ -6,9 +6,14 @@ import {registerRoomHandlers} from "./lib/room-handlers.js";
 
 const app = express()
 const server = createServer(app);
+const clientOrigins = (process.env.CLIENT_ORIGINS ?? '')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
 const io = new Server(server, {
     cors: {
-        origin: process.env.CLIENT_ORIGINS?.split(',')
+        origin: clientOrigins
     }
 });
 
