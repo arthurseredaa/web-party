@@ -1,5 +1,5 @@
 import type {Server, Socket} from "socket.io";
-import type {RoomAck} from "@wp/shared";
+import type {BuzzAck, PlayerBuzzed, RoomAck} from "@wp/shared";
 import type {RoomRegistry} from "./room.js";
 
 const isJoinPayload = (value: unknown): value is {code: string; name: string} =>
@@ -7,7 +7,7 @@ const isJoinPayload = (value: unknown): value is {code: string; name: string} =>
     && 'code' in value && typeof value.code === 'string'
     && 'name' in value && typeof value.name === 'string';
 
-const reply = (cb: unknown, ack: RoomAck | {ok: true}) => {
+const reply = (cb: unknown, ack: RoomAck | BuzzAck) => {
     if (typeof cb === 'function') {
         cb(ack);
     }
@@ -62,6 +62,12 @@ export const registerRoomHandlers = (io: Server, socket: Socket, roomRegistry: R
     socket.on('room:leave', (...args: unknown[]) => {
         leaveRoom();
         reply(args.at(-1), {ok: true});
+    })
+
+    socket.on('player:buzz', (...args: unknown[]) => {
+        const cb = args.at(-1);
+
+        // TODO(human)
     })
 
     socket.on('disconnect', leaveRoom)
